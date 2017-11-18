@@ -3,21 +3,6 @@
 int no_of_tasks=0;
 char  names[100][100];//stores list of task names used to ensure uniqueness
 
-void next(struct node *q){
-    char ch;
-    printf("\nContinue?(y/n)");
-    scanf("\n%c",&ch);
-    if(ch=='y'){
-        system("clear");
-        printf("\n\n-------------------------------------------------------------------");
-        printf("\n\t\t\t    MENU ");
-        printf("\n-------------------------------------------------------------------\n");
-    }
-    else{
-        s(q);
-        exit(0);
-    }
-}
 
 //checks if entered name is unique
 int isunique(char * name){
@@ -279,7 +264,6 @@ void insert(struct node** list){
     if(*list==NULL){
 
         *list=temp;
-        next(*list);
         return;
     }
     struct node *curr;
@@ -301,7 +285,6 @@ void insert(struct node** list){
     }
     if(curr==NULL){
         prev->next=temp;
-        next(*list);
         return;
     }
     else{
@@ -314,7 +297,6 @@ void insert(struct node** list){
             temp->next=curr;
         }
     }
-    next(*list);
 }
 
 //function to edit tasks as required
@@ -446,7 +428,6 @@ void task(struct node ** first){
             break;
         }
     }
-    next(*first);
 }
 //to mark if the task is completed
 void task_completed(struct node**first){
@@ -467,7 +448,6 @@ void task_completed(struct node**first){
     if (n->status!=1){
         printf("This task does not exist\n");
     }
-    next(*first);
 }
 //Validation of priority.
 int validate_info(int p){
@@ -674,7 +654,10 @@ void extension(struct node **first){
                 }
             }
             //insertion position is FOUND
-            if(curr==NULL){
+            if(curr==NULL&&prev==NULL){
+                *first=temp;
+            }
+            else if(curr==NULL){
                 prev->next=temp;
             }
             else{
@@ -694,10 +677,13 @@ void extension(struct node **first){
             if(previous==NULL)
             {
                 *first=current->next;
+                previous=NULL;
             }
             else
                 previous->next=current->next;
-            free(current);
+            struct node* q=current;
+            current=*first;
+            free(q);
             no_of_tasks-=1;//no of tasks s reduced
             break;
 
